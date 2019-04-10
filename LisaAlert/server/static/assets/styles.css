@@ -1,0 +1,335 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+section {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+}
+#map {
+    height:100%;
+    width:100%;
+}
+.main {
+    background: #d9ffa3;
+}
+.persons{
+    display:flex;
+    align-items: center;
+    flex-direction:column;
+    margin-top: 10px;
+    max-height: 50vh;
+    overflow: auto;
+    overflow-X:hidden;
+}
+.person{
+    width: 126px;
+    padding: 5px;
+    margin: 5px;
+}
+.menu {
+    position: fixed;
+    right:0;top: 0;
+    z-index: 99;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    transition: 0.5s;
+    transform: translateX(100%);
+
+}
+.menu_active {
+    transform: translateX(0%);
+    min-height: 30%;
+}
+.menu-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    margin-bottom: 7px;
+}
+.menu-btn {
+    display: block;
+    width: 50px;
+    height: 50px;
+    background-color: #fcc422;
+    position: absolute;
+    left: -53px;
+    top: 5px;
+    transition: 0.3s;
+}
+.menu-btn span,
+.menu-btn span::before,
+.menu-btn span::after{
+    position: absolute;
+    top: 50%; margin-top: -1px;
+    left: 50%; margin-left: -10px;
+    width: 20px;
+    height: 2px;
+    background: #222;
+    transition: 0.3s;
+}
+.menu-btn span::before,
+.menu-btn span::after{
+    content: '';
+}
+.menu-btn span::before{
+    transform: translateY(-5px);
+}
+.menu-btn span::after{
+    transform: translateY(5px);
+}
+.menu-btn_active{
+    transition: 0.3s;
+    top:0px;
+    left: -50px;
+}
+.menu-btn_active span::before{
+    transform: rotate(30deg);
+    width: 10px;
+    margin-left: 0px;
+    top:-2px;
+}
+.menu-btn_active span::after{
+    transform: rotate(-30deg);
+    width: 10px;
+    margin-left: 0px;
+    top:4px;
+}
+.inputs{
+    width: 100%;
+}
+.border-input:first-child{
+    border-top:1px dashed #242424;
+}
+.border-input{
+    border-bottom:1px dashed #242424;
+    margin-top: 15px;
+    padding: 5px;
+}
+.input{
+    border-radius: 20px;
+    transition: 0.2s;
+    background: #fcc422;
+    color:#242424;
+    border:none;
+    outline: none;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.button{
+    border-radius: 20px;
+    transition: 0.2s;
+    background: #fcc422;
+    color:#242424;
+    border:none;
+    outline: none;
+    padding: 10px 15px 10px 15px;
+    margin-bottom:10px;
+    margin-top: 10px;
+}
+.button:hover{
+    background: #242424;
+    color:#fcc422;
+    box-shadow:0 0 10px grey;
+    transition: 0.2s;
+}
+.input:focus{
+    background: #242424;
+    color:#fcc422;
+    box-shadow:0 0 10px grey;
+    transition: 0.2s;
+}
+.wrapper1{
+    width: 100%;
+    text-align: center;
+    transition: 5s;
+}
+.tabs{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+.tab{
+    cursor:pointer;
+    padding:20px;
+    display: inline-block;
+    width: 50%;
+    background: #242424;
+    color: #fcc422;
+    transition: 0.5s;
+}
+.tab.active{
+    background: #ffffff;
+    color: black;
+    transition: 0.5s;
+}
+
+.switch-for{
+    cursor: pointer;
+    font-size: 16px;
+    position: relative;
+}
+.switch-for::after{
+    content:"";
+    width: 50px;
+    height: 25px;
+    background:#242424;
+    border: 1px solid black;
+    border-radius: 15px;
+    position: absolute;
+    top:-4px;
+    right:-62px;
+    transition-delay: 3s;
+    transition: 0.2s;
+}
+.switch-for::before{
+    content:"";
+    width: 21px;
+    height: 21px;
+    background:#fff;
+    border-radius: 50%;
+    position: absolute;
+    top:-1px;
+    right:-35px;
+    z-index:1;
+    transition: 0.3s;
+}
+.switch{
+    display: none;
+}
+.switch:checked + .switch-for::before{
+    right: -58px;
+}
+.switch:checked + .switch-for::after{
+    background: #fcc422;
+}
+.table{
+    display: block;
+    padding: 5px;
+    margin: 10px;
+}
+.tab{
+    cursor:pointer;
+    padding:20px;
+    display: inline-block;
+    width: 50%;
+    background: #242424;
+    color: #fcc422;
+    transition: 0.5s;
+}
+.switch-for{
+    cursor: pointer;
+    font-size: 16px;
+    position: relative;
+}
+.switch-for::after{
+    content:"";
+    width: 50px;
+    height: 25px;
+    background:#242424;
+    border: 1px solid black;
+    border-radius: 15px;
+    position: absolute;
+    top:-4px;
+    right:-62px;
+    transition-delay: 3s;
+    transition: 0.2s;
+}
+.switch-for::before{
+    content:"";
+    width: 21px;
+    height: 21px;
+    background:#fff;
+    border-radius: 50%;
+    position: absolute;
+    top:-1px;
+    right:-35px;
+    z-index:1;
+    transition: 0.3s;
+}
+.switch{
+    display: none;
+}
+.switch:checked + .switch-for::before{
+    right: -58px;
+}
+.switch:checked + .switch-for::after{
+    background: #fcc422;
+}
+.table{
+    display: block;
+    padding: 5px;
+    margin: 10px;
+}
+.infoBox {
+    color: #242424;
+}
+
+@media(min-width:561px) {
+    .menu{
+        min-height: 30%;
+        width: 30%;
+    }
+    .input{
+        width: 150px;
+    }
+}
+@media(max-width:560px)and (min-height:380px) {
+    .menu{
+        width: 100%;
+        min-height: 30%;
+        top: 0;
+    }
+    .input{
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    .menu-btn_active{
+        transition: 0.3s;
+        top:0px;
+        left: 0px;
+        width: 40px;
+        height: 40px;
+    }
+    .info{
+        display: none;
+    }
+}
+@media(max-width:560px)and (max-height:380px) {
+    .menu{
+        width: 100%;
+        min-height: 40%;
+        top: 0;
+    }
+    .input{
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    .menu-btn_active {
+        transition: 0.3s;
+        top: 0px;
+        left: 0px;
+        width: 40px;
+        height: 40px;
+    }
+}
+@media(min-width:1000px) {
+    .menu{
+        width: 300px;
+        min-height: 30%;
+    }
+    .input{
+        font-size:20px;
+        width: auto;
+    }
+}

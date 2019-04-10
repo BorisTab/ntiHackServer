@@ -1,0 +1,66 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel=stylesheet href="../../static/assets/styles.css">
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaIGVam3ZbXbjokw5Q1Hmf2wx-0VJ3R_Q&callback=initMap"
+            async defer></script>
+    <script src="../../static/js/main.js"></script>
+    <script src="../../static/js/map.js"></script>
+    <title>LizaHack</title>
+</head>
+<body>
+<div class="menu">
+    <a href="#" class="menu-btn">
+        <span></span>
+    </a>
+    <div class="wrapper1">
+        <div class="tabs">
+            <span class="tab active">Создать группу</span>
+            <span class="tab">Настройки</span>
+        </div>
+        <div class="tab_content">
+            <form action="/create_group/1" method="POST">
+                <div class="tab_item">
+                    <nav class="menu-list">
+                        <div class="persons">
+
+                        </div>
+                    </nav>
+                    <input class="button" name="button" type="submit" value="Создать группу"></div>
+            </form>
+            <div class="tab_item">
+                <nav class="menu-list">
+                    <input type="checkbox" class="switch" id="switch1">
+                    <label for="switch1" class="switch-for">Показать трек</label>
+                    <form id="coordinates" class="inputs">
+                        <div class="border-input">
+                            <p>Координаты левого верхнего угла</p>
+                            <input id="rightUp" class="input" name="input1" title="Координаты левого верхнего угла"
+                                   placeholder="Пример:   52.43; 43.22" type="text">
+                        </div>
+                        <div class="border-input">
+                            <p>Координаты правого нижнего угла</p>
+                            <input id="leftBottom" class="input" name="input2" title="Координаты правого нижнего угла"
+                                   placeholder="Пример:   28.16; 37.36" type="text">
+                        </div>
+                        <button id="coordinateSend" class="button" name="button-cor" type="submit">Включить сетку</button>
+                    </form>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content">
+    <section class="main" id="main">
+        <div id="map"></div>
+    </section>
+</div>
+</body>
+</html>
