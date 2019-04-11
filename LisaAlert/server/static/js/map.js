@@ -80,7 +80,7 @@ function addMarker(
     content: `<div class="infoBox">${info}</div>`,
   });
   marker.addListener('click', () => infoBox.open(map, marker));
-  markers[id] = marker;
+  id < markers.length ? markers[id] = marker : markers.push(marker);
 }
 
 function addRoute(
@@ -132,7 +132,7 @@ const getData = () => {
     const markups = data.markups;
     users.map((item) => {
       const itemId = users.indexOf(item);
-      if (lastData[users.indexOf(item)].coordinates !== item.coordinates) {
+      if (lastData.users[itemId].coordinates !== item.coordinates) {
         clearMarker(itemId);
         clearRoutes(itemId);
         addMarker(item.coordinates, item.color, item.infobox, itemId);
