@@ -50,8 +50,9 @@ $(document).ready(() => {
     const users = data.users;
     const markups = data.markups;
     users.map((item) => {
-      addMarker(item.coordinates, item.color, item.infobox);
-      addRoute(item.route, item.color);
+      const itemId = users.indexOf(item);
+      addMarker(item.coordinates, item.color, item.infobox, itemId);
+      addRoute(item.route, item.color, itemId);
     });
     markups.map((item) => {
       addMarkup(item.coordinates, item.infobox);
@@ -133,6 +134,8 @@ const getData = () => {
     users.map((item) => {
       const itemId = users.indexOf(item);
       if (lastData.users[itemId].coordinates !== item.coordinates) {
+        console.log(lastData);
+        console.log(markers);
         clearMarker(itemId);
         clearRoutes(itemId);
         addMarker(item.coordinates, item.color, item.infobox, itemId);
