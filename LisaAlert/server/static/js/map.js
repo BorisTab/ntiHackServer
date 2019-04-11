@@ -133,7 +133,8 @@ const getData = () => {
     const markups = data.markups;
     users.map((item) => {
       const itemId = users.indexOf(item);
-      if (lastData.users[itemId].coordinates !== item.coordinates) {
+      if (lastData.users[itemId].coordinates.lat !== item.coordinates.lat &&
+          lastData.users[itemId].coordinates.lng !== item.coordinates.lng) {
         console.log(lastData);
         console.log(markers);
         clearMarker(itemId);
