@@ -1,9 +1,12 @@
 let map;
+let markers = [];
+let routes = [];
+let lastData = {};
 
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 55.73, lng: 37.66},
-    zoom: 13,
+    zoom: 5,
     disableDefaultUI: true,
   });
 
@@ -36,20 +39,35 @@ $(document).ready(() => {
     //   west: leftDownLng,
     // };
   });
-//  addMarker();
-//  addRoute();
-//  addMarkup();
-
-setInterval(getData, 3000);
+  // addMarker();
+  // addRoute();
+  // addMarkup();
+  $.ajax({
+    type: 'POST',
+    url: '/front_update/',
+  }).done((data) => {
+    console.log(data.users);
+    const users = data.users;
+    const markups = data.markups;
+    users.map((item) => {
+      addMarker(item.coordinates, item.color, item.infobox);
+      addRoute(item.route, item.color);
+    });
+    markups.map((item) => {
+      addMarkup(item.coordinates, item.infobox);
+    });
+    lastData = data;
+  });
+  setInterval(getData, 3000);
 });
 
 function addMarker(
     coordinates = {lat: 55.73, lng: 37.66},
     color = 'e40076',
-    info = 'Lorem Ipsum') {
+    info = 'Lorem Ipsum',
+    id) {
   const icon = {
     url: `../static/assets/icons/${color}.png`,
-//    size: new google.maps.Size(30, 30),
     anchor: new google.maps.Point(15, 15),
   };
   const marker = new google.maps.Marker({
@@ -62,6 +80,7 @@ function addMarker(
     content: `<div class="infoBox">${info}</div>`,
   });
   marker.addListener('click', () => infoBox.open(map, marker));
+  markers[id] = marker;
 }
 
 function addRoute(
@@ -69,7 +88,8 @@ function addRoute(
       {lat: 55.73, lng: 37.66},
       {lat: 55.75, lng: 37.62},
     ],
-    color = 'e40076') {
+    color = 'e40076',
+    id) {
   const line = new google.maps.Polyline({
     path: route,
     strokeColor: `#${color}`,
@@ -77,6 +97,15 @@ function addRoute(
     strokeWeight: 3,
   });
   line.setMap(map);
+  routes[id] = line;
+}
+
+function clearMarker(id) {
+  markers[id].setMap(null);
+}
+
+function clearRoutes(id) {
+  routes[id].setMap(null);
 }
 
 function addMarkup(
@@ -95,18 +124,24 @@ function addMarkup(
 
 const getData = () => {
   $.ajax({
-  type: 'POST',
-  url: '/front_update/',
-}).done((data) => {
-  console.log(data.users);
-  const users = data.users;
-  const markups = data.markups;
-  users.map((item) => {
-    addMarker(item.coordinates, item.color, item.infobox);
-    addRoute(item.route, item.color);
+    type: 'POST',
+    url: '/front_update/',
+  }).done((data) => {
+    console.log(data.users);
+    const users = data.users;
+    const markups = data.markups;
+    users.map((item) => {
+      const itemId = users.indexOf(item);
+      if (lastData[users.indexOf(item)].coordinates !== item.coordinates) {
+        clearMarker(itemId);
+        clearRoutes(itemId);
+        addMarker(item.coordinates, item.color, item.infobox, itemId);
+        addRoute(item.route, item.color, itemId);
+      }
+    });
+    markups.map((item) => {
+      addMarkup(item.coordinates, item.infobox);
+    });
+    lastData = data;
   });
-  markups.map((item) => {
-    addMarkup(item.coordinates, item.infobox);
-  });
-});
-}
+};
