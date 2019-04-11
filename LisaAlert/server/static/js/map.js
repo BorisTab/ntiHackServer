@@ -98,7 +98,7 @@ function addRoute(
     strokeWeight: 3,
   });
   line.setMap(map);
-  routes[id] = line;
+  id < routes.length ? routes[id] = line : routes.push(line);
 }
 
 function clearMarker(id) {
@@ -106,6 +106,7 @@ function clearMarker(id) {
 }
 
 function clearRoutes(id) {
+  console.log(routes[id]);
   routes[id].setMap(null);
 }
 
@@ -133,7 +134,7 @@ const getData = () => {
     const markups = data.markups;
     users.map((item) => {
       const itemId = users.indexOf(item);
-      if (lastData.users[itemId].coordinates.lat !== item.coordinates.lat &&
+      if (lastData.users[itemId].coordinates.lat !== item.coordinates.lat ||
           lastData.users[itemId].coordinates.lng !== item.coordinates.lng) {
         console.log(lastData);
         console.log(markers);
