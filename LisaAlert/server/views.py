@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import request
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, HttpResponse
-from .models import Operation, Route, User, Markup
+from .models import Operation, Route, User, Markup, Color
 from time import sleep
 from datetime import datetime
 import json
@@ -107,6 +107,7 @@ def frontend_update(request):
         data['markups'].append(markup_data)
 
     users = User.objects.all()
+    colors = [color.color for color in Color.objects.all().order_by('group_id')]
 
     for user in users:
         route_entries = Route.objects.filter(person_id=user.person_id)
@@ -115,7 +116,7 @@ def frontend_update(request):
                     <p>"""+user.nickname+"""</p>
                     <p>Группа: Лиса """ + str(user.group_id) + """</p>
                 </h1>"""
-        user_data= {"color": "e40076",
+        user_data= {"color": colors[user.group_id],
                     'coordinates': route[::-1][0],
                     'route': route,
                     'infobox': infobox}
