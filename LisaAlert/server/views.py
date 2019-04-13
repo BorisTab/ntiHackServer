@@ -92,10 +92,7 @@ def add_markup(request):
 
 @csrf_exempt
 def frontend_update(request):
-    data = {}
-    data['users'] = []
-    data['markups'] = []
-
+    data = {'users': [], 'markups': []}
 
     markups = Markup.objects.all()
     for markup in markups:

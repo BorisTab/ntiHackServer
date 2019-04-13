@@ -44,7 +44,7 @@ $(document).ready(() => {
   // addMarkup();
   $.ajax({
     type: 'POST',
-    url: '/front_update/',
+    url: '/map/update/',
   }).done((data) => {
     console.log(data.users);
     const users = data.users;
@@ -127,7 +127,7 @@ function addMarkup(
 const getData = () => {
   $.ajax({
     type: 'POST',
-    url: '/front_update/',
+    url: '/map/update/',
   }).done((data) => {
     console.log(data.users);
     const users = data.users;
