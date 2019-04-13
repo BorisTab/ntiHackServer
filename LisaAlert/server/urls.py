@@ -8,5 +8,7 @@ urlpatterns = [
     path('group/create/', views.create_group, name='create_group'),
     path('operation/leave/', views.leave_operation, name='leave_op'),
     path('memo/add/', views.add_markup, name='add_mark'),
-    path('map/update/', views.frontend_update, name='front_update')
+    path('map/update/', views.frontend_update, name='front_update'),
+    path('person/is_waiting/', views.get_unallocated_users, name='get_unallocated_users'),
+    path('person/assigned/', views.is_assigned, name="is_assigned")
 ]

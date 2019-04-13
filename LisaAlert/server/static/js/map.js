@@ -46,8 +46,8 @@ $(document).ready(() => {
     type: 'POST',
     url: '/map/update/',
   }).done((data) => {
-    const users = data.users;
-    const markups = data.markups;
+    const users = data.message.users;
+    const markups = data.message.markups;
     users.map((item) => {
       const itemId = users.indexOf(item);
       addMarker(item.coordinates, item.color, item.infobox, itemId);
@@ -144,8 +144,8 @@ const getData = () => {
     type: 'GET',
     url: '/map/update/',
   }).done((data) => {
-    const users = data.users;
-    const markups = data.markups;
+    const users = data.message.users;
+    const markups = data.message.markups;
     users.map((item) => {
       const itemId = users.indexOf(item);
       if (lastData.users[itemId].coordinates.lat !== item.coordinates.lat ||
@@ -164,3 +164,4 @@ const getData = () => {
     lastData = data;
   });
 };
+// TODO remove checkbox

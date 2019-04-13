@@ -17,7 +17,7 @@ $(document).ready(() => {
 
   $.ajax({
     type: 'GET',
-    url: '',
+    url: '/person/iswaiting',
   }).done((data) => {
     data.map((person) => {
       $('.persons').html(`<input type="radio" value="${person}">`);
