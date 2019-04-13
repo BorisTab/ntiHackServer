@@ -46,7 +46,6 @@ $(document).ready(() => {
     type: 'POST',
     url: '/map/update/',
   }).done((data) => {
-    console.log(data.users);
     const users = data.users;
     const markups = data.markups;
     users.map((item) => {
@@ -125,29 +124,32 @@ function addMarkup(
 }
 
 let switchCheck = true;
-$('.switch-for').click(() => {
-  if(switchCheck) {
-      $('#switch1').prop('checked', false);
-      switchCheck = false;
+$(document).on('click', '.switch-for', () => {
+  if (switchCheck) {
+    switchCheck = false;
+    routes.map((route) => {
+      route.setMap(null);
+    });
   } else {
-    $('#switch1').prop('checked', true);
+    console.log(lastData.users);
     switchCheck = true;
-  };
+    lastData.users.map((user) => {
+      const itemId = lastData.users.indexOf(user);
+      addRoute(user.route, user.color, itemId);
+    });
+  }
 });
-
 const getData = () => {
-<<<<<<< Updated upstream
   $.ajax({
-    type: 'POST',
+    type: 'GET',
     url: '/map/update/',
   }).done((data) => {
-    console.log(data.users);
     const users = data.users;
     const markups = data.markups;
     users.map((item) => {
       const itemId = users.indexOf(item);
       if (lastData.users[itemId].coordinates.lat !== item.coordinates.lat ||
-          lastData.users[itemId].coordinates.lng !== item.coordinates.lng) {
+        lastData.users[itemId].coordinates.lng !== item.coordinates.lng) {
         console.log(lastData);
         console.log(markers);
         clearMarker(itemId);
@@ -155,37 +157,10 @@ const getData = () => {
         addMarker(item.coordinates, item.color, item.infobox, itemId);
         addRoute(item.route, item.color, itemId);
       }
-=======
-  if($('#switch1').prop('checked') === 'checked') {
-    $.ajax({
-      type: 'POST',
-      url: '/front_update/',
-    }).done((data) => {
-      console.log(data.users);
-      const users = data.users;
-      const markups = data.markups;
-      users.map((item) => {
-        const itemId = users.indexOf(item);
-        if (lastData.users[itemId].coordinates.lat !== item.coordinates.lat ||
-            lastData.users[itemId].coordinates.lng !== item.coordinates.lng) {
-          console.log(lastData);
-          console.log(markers);
-          clearMarker(itemId);
-          clearRoutes(itemId);
-          addMarker(item.coordinates, item.color, item.infobox, itemId);
-          addRoute(item.route, item.color, itemId);
-        }
-      });
-      markups.map((item) => {
-        addMarkup(item.coordinates, item.infobox);
-      });
-      lastData = data;
->>>>>>> Stashed changes
     });
-  } else {
-    routes.map((item) => {
-      console.log(false);
-      item.setMap(null);
+    markups.map((item) => {
+      addMarkup(item.coordinates, item.infobox);
     });
-  }
+    lastData = data;
+  });
 };

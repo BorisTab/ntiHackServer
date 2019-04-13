@@ -42,6 +42,7 @@ def set_operation(request):
     group = User.objects.get(nickname=nickname).group_id
     return JsonResponse({"status": "OK", "group_id": group})
 
+
 @csrf_exempt
 def update(request):
     data = json.loads(request.body.decode("utf-8"))
@@ -80,6 +81,7 @@ def leave_operation(request):
         user.save()
     return JsonResponse({"status": "OK"})
 
+
 @csrf_exempt
 def add_markup(request):
     data = json.loads(request.body.decode("utf-8"))
@@ -89,6 +91,7 @@ def add_markup(request):
     markup = Markup(lat=lat, lng=lng, memo=memo)
     markup.save()
     return JsonResponse({"status": "OK"})
+
 
 @csrf_exempt
 def frontend_update(request):

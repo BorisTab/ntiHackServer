@@ -50,9 +50,8 @@ section {
 .menu-list {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     flex-direction: column;
-    height: 100%;
     margin-bottom: 7px;
 }
 .menu-btn {
