@@ -12,15 +12,15 @@ $(document).ready(() => {
   // show();
   // setInterval('show()', 1000);
 
-  $('.menu-btn').click((e) => {
+  $('.menu-btn').on('click', function(e) {
     e.preventDefault();
     $('.menu').toggleClass('menu_active');
     $('.menu-btn').toggleClass('menu-btn_active');
-  });
+  })
 
-  $('.tab_item').not(':first').hide();
-  $('.tab').click(() => {
-    $(this).removeClass('active').siblings().addClass('active');
-    $('.tab_item').hide().eq($(this).index()).fadeIn();
-  }).eq(0).addClass('active');
+  $(".tab_item").not(":first").hide();
+  $(".wrapper1 .tab").click(function() {
+    $(".wrapper1 .tab").removeClass("active").eq($(this).index()).addClass("active");
+    $(".tab_item").hide().eq($(this).index()).fadeIn()
+  }).eq(0).addClass("active");
 });
