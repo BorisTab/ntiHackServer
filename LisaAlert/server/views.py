@@ -1,24 +1,22 @@
 from django.shortcuts import render
 from django.http import request
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from .models import Operation, Route, User, Markup, Color
-from time import sleep
+from .server_response import ServerResponse
 from datetime import datetime
 import json
 
-waiting_for_response = []
 
-
-# GET-method
 def get_operations(request):
     operations = Operation.objects.all()
-    response = []
+    message = []
     for operation in operations:
-        operation = dict(id=operation.operation_id, name=operation.operation_name)
-        response.append(operation)
+        operation = dict(id=operation.id, name=operation.name, description=operation.description)
+        message.append(operation)
+    response = ServerResponse(message=message, status="OK")
 
-    return JsonResponse({"operations": response})
+    return JsonResponse(response.to_dict())
 
 
 # POST-method
@@ -26,21 +24,57 @@ def get_operations(request):
 def set_operation(request):
     data = json.loads(request.body.decode("utf-8"))
     nickname = data["nickname"]
-    operation_id = data["id"]
+    uid = data["id"]
 
     user = User.objects.get(nickname=nickname)
-    operation = Operation.objects.get(operation_id=operation_id)
+    operation = Operation.objects.get(id=uid)
     user.operation_id = operation
     user.online = True
+    user.waiting_for_assignment = True
     user.save()
+    response = ServerResponse(status="OK", message="Wait for assignment")
 
-    person_id = user.person_id
-    waiting_for_response.append(person_id)
-    while person_id in waiting_for_response:
-        sleep(1)
+    return JsonResponse(response.to_dict())
 
-    group = User.objects.get(nickname=nickname).group_id
-    return JsonResponse({"status": "OK", "group_id": group})
+
+def get_unallocated_users(request):
+    users = User.objects.filter(waiting_for_assignment=True)
+    names = [user.nickname for user in users]
+    response = ServerResponse(status="OK", message=names)
+
+    return JsonResponse(response.to_dict())
+
+
+def create_group(request):
+    existing_group_ids = set([user.group_id for user in User.objects.all()])
+    group_id = len(list(existing_group_ids))+1
+
+    data = json.loads(request.body.decode("utf-8"))
+    nicknames = data['users']
+    for nickname in nicknames:
+        user = User.objects.get(nickname=nickname)
+        user.group_id = group_id
+        user.waiting_for_assignment = False
+        user.save()
+    response = ServerResponse(status="OK", message="")
+
+    return JsonResponse(response.to_dict())
+
+
+@csrf_exempt
+def is_assigned(request):
+    data = json.loads(request.body.decode("utf-8"))
+    nickname = data['nickname']
+    user = User.objects.get(nickname=nickname)
+    flag = user.waiting_for_assignment
+    if flag:
+        message = {"assigned": True}
+    else:
+        message = {"assigned": False}
+
+    response = ServerResponse(status="OK", message=message)
+    return JsonResponse(response.to_dict())
+
 
 @csrf_exempt
 def update(request):
@@ -53,32 +87,25 @@ def update(request):
     user = User.objects.get(person_id=person_id)
     route_point = Route(lat=latitude, lng=longitude, time=time, person_id=user)
     route_point.save()
+    response = ServerResponse(status="OK", message="")
 
-    return JsonResponse({"status": "OK"})
-
-
-def create_group(request):
-    existing_group_ids = set([user.group_id for user in User.objects.all()])
-    group_id = len(list(existing_group_ids))
-
-    nicknames = request.POST["users"]
-    for nickname in nicknames:
-        user = User.objects.get(nickname=nickname)
-        user.group_id = group_id
-        user.save()
-        waiting_for_response.remove(nickname)
-
-    return HttpResponse("")
+    return JsonResponse(response.to_dict())
 
 
+@csrf_exempt
 def leave_operation(request):
-    group_id = request.POST['group_id']
-    people_in_group = User.objects.filter(group_id=group_id)
-    for user in people_in_group:
+    data = json.loads(request.body.decode("utf-8"))
+    nickname = data['nickname']
+    sender = User.objects.get(nickname=nickname)
+    users_in_group = User.objects.filter(group_id=sender.group_id)
+    for user in users_in_group:
         user.online = False
-        user.group_id = None
+        user.group_id = -1
         user.save()
-    return JsonResponse({"status": "OK"})
+
+    response = ServerResponse(status="OK", message="")
+    return JsonResponse(response.to_dict())
+
 
 @csrf_exempt
 def add_markup(request):
@@ -88,7 +115,9 @@ def add_markup(request):
     memo = data['memo']
     markup = Markup(lat=lat, lng=lng, memo=memo)
     markup.save()
-    return JsonResponse({"status": "OK"})
+    response = ServerResponse(status="OK", message="")
+    return JsonResponse(response.to_dict())
+
 
 @csrf_exempt
 def frontend_update(request):
@@ -118,7 +147,10 @@ def frontend_update(request):
                     'route': route,
                     'infobox': infobox}
         data['users'].append(user_data)
-    return JsonResponse(data)
+
+    response = ServerResponse(status="OK", message=data)
+
+    return JsonResponse(response.to_dict())
 
 
 def main_view(request):

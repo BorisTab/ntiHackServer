@@ -50,9 +50,8 @@ section {
 .menu-list {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     flex-direction: column;
-    height: 100%;
     margin-bottom: 7px;
 }
 .menu-btn {
@@ -149,6 +148,7 @@ section {
     transition: 0.2s;
 }
 .wrapper1{
+    height: 100vh;
     width: 100%;
     text-align: center;
     transition: 5s;

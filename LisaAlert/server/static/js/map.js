@@ -46,9 +46,8 @@ $(document).ready(() => {
     type: 'POST',
     url: '/map/update/',
   }).done((data) => {
-    console.log(data.users);
-    const users = data.users;
-    const markups = data.markups;
+    const users = data.message.users;
+    const markups = data.message.markups;
     users.map((item) => {
       const itemId = users.indexOf(item);
       addMarker(item.coordinates, item.color, item.infobox, itemId);
@@ -124,18 +123,33 @@ function addMarkup(
   marker.addListener('click', () => infoBox.open(map, marker));
 }
 
+let switchCheck = true;
+$(document).on('click', '.switch-for', () => {
+  if (switchCheck) {
+    switchCheck = false;
+    routes.map((route) => {
+      route.setMap(null);
+    });
+  } else {
+    console.log(lastData.users);
+    switchCheck = true;
+    lastData.users.map((user) => {
+      const itemId = lastData.users.indexOf(user);
+      addRoute(user.route, user.color, itemId);
+    });
+  }
+});
 const getData = () => {
   $.ajax({
-    type: 'POST',
+    type: 'GET',
     url: '/map/update/',
   }).done((data) => {
-    console.log(data.users);
-    const users = data.users;
-    const markups = data.markups;
+    const users = data.message.users;
+    const markups = data.message.markups;
     users.map((item) => {
       const itemId = users.indexOf(item);
       if (lastData.users[itemId].coordinates.lat !== item.coordinates.lat ||
-          lastData.users[itemId].coordinates.lng !== item.coordinates.lng) {
+        lastData.users[itemId].coordinates.lng !== item.coordinates.lng) {
         console.log(lastData);
         console.log(markers);
         clearMarker(itemId);
@@ -150,3 +164,4 @@ const getData = () => {
     lastData = data;
   });
 };
+// TODO remove checkbox

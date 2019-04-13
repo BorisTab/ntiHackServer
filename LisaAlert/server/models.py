@@ -2,11 +2,12 @@ from django.db import models
 
 
 class Operation(models.Model):
-    operation_name = models.CharField(max_length=200)
-    operation_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200)
+    description = models.CharField(max_length=400)
+    id = models.AutoField(primary_key=True)
 
     def __str__(self):
-        return self.operation_name
+        return self.name
 
 
 class User(models.Model):
@@ -15,6 +16,7 @@ class User(models.Model):
     nickname = models.CharField(max_length=50, unique=True)
     online = models.BooleanField()
     group_id = models.IntegerField()
+    waiting_for_assignment = models.BooleanField(default=False)
     password = models.CharField(max_length=50)
 
     def __str__(self):
