@@ -124,7 +124,19 @@ function addMarkup(
   marker.addListener('click', () => infoBox.open(map, marker));
 }
 
+let switchCheck = true;
+$('.switch-for').click(() => {
+  if(switchCheck) {
+      $('#switch1').prop('checked', false);
+      switchCheck = false;
+  } else {
+    $('#switch1').prop('checked', true);
+    switchCheck = true;
+  };
+});
+
 const getData = () => {
+<<<<<<< Updated upstream
   $.ajax({
     type: 'POST',
     url: '/map/update/',
@@ -143,10 +155,37 @@ const getData = () => {
         addMarker(item.coordinates, item.color, item.infobox, itemId);
         addRoute(item.route, item.color, itemId);
       }
+=======
+  if($('#switch1').prop('checked') === 'checked') {
+    $.ajax({
+      type: 'POST',
+      url: '/front_update/',
+    }).done((data) => {
+      console.log(data.users);
+      const users = data.users;
+      const markups = data.markups;
+      users.map((item) => {
+        const itemId = users.indexOf(item);
+        if (lastData.users[itemId].coordinates.lat !== item.coordinates.lat ||
+            lastData.users[itemId].coordinates.lng !== item.coordinates.lng) {
+          console.log(lastData);
+          console.log(markers);
+          clearMarker(itemId);
+          clearRoutes(itemId);
+          addMarker(item.coordinates, item.color, item.infobox, itemId);
+          addRoute(item.route, item.color, itemId);
+        }
+      });
+      markups.map((item) => {
+        addMarkup(item.coordinates, item.infobox);
+      });
+      lastData = data;
+>>>>>>> Stashed changes
     });
-    markups.map((item) => {
-      addMarkup(item.coordinates, item.infobox);
+  } else {
+    routes.map((item) => {
+      console.log(false);
+      item.setMap(null);
     });
-    lastData = data;
-  });
+  }
 };
