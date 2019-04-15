@@ -22,7 +22,7 @@ $(document).ready(() => {
             ${person}
           </label>`);
     });
-    lastDataUsers = data;
+    lastDataUsers = data.message;
   });
   setInterval(getUsers, 3000);
 });
@@ -32,19 +32,28 @@ const getUsers = () => {
     type: 'GET',
     url: '/person/is_waiting/',
   }).done((data) => {
-    if (data !== lastDataUsers) {
+    let check = true;
+    data.message.map((item) => {
+      const id = data.message.indexOf(item);
+      if (item !== lastDataUsers[id]) {
+        check = false;
+      }
+    });
+    if (!check) {
+      console.log(lastDataUsers);
+      console.log(data.message);
       $('.people').empty();
       data.message.map((person) => {
-        $('.people').html(`<label for="${person}">
-              <input id="${person}" type="checkbox">
-              ${person}
-            </label>`);
+        $('.people').html(`<label for="${person}"><input class="person" id="${person}" type="checkbox">${person}</label>`);
       });
+      lastDataUsers = data.message;
     }
   });
 };
 
-$('.makeGroup').submit(() => {
+$(document).on('click', '#sendGroup', (e) => {
+  console.log('ass');
+  e.preventDefault();
   let checkedPeople = [];
   $(this).find('input').each(() => {
     const person = $(this).prop('id');
@@ -56,10 +65,13 @@ $('.makeGroup').submit(() => {
     method: 'POST',
     url: '/group/create/',
     data: checkedPeople,
-  }).done(() => {
-    checkedPeople.map((person) => {
-      $(`#${person}`).css('display', 'none');
-    });
-    checkedPeople = [];
+  }).done((data) => {
+    if (data.status === 'OK') {
+      checkedPeople.map((person) => {
+        $(`#${person}`).css('display', 'none');
+      });
+      checkedPeople = [];
+    }
   });
+  return false;
 });
