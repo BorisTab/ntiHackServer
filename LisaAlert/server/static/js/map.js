@@ -65,7 +65,7 @@ $(document).ready(() => {
     markups.map((item) => {
       addMarkup(item.coordinates, item.infobox);
     });
-    lastData = data;
+    lastData = data.message;
   });
   setInterval(getData, 3000);
 });
@@ -166,6 +166,6 @@ const getData = () => {
     markups.map((item) => {
       addMarkup(item.coordinates, item.infobox);
     });
-    lastData = data;
+    lastData = data.message;
   });
 };

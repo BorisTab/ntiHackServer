@@ -16,9 +16,9 @@ $(document).ready(() => {
 
   $.ajax({
     type: 'GET',
-    url: '/person/iswaiting',
+    url: '/person/is_waiting/',
   }).done((data) => {
-    data.map((person) => {
+    data.message.map((person) => {
       $('.people').html(`<label for="${person}">
             <input id="${person}" type="checkbox">
             ${person}
@@ -32,11 +32,11 @@ $(document).ready(() => {
 const getUsers = () => {
   $.ajax({
     type: 'GET',
-    url: '/person/iswaiting',
+    url: '/person/is_waiting/',
   }).done((data) => {
     if (data !== lastDataUsers) {
       $('.people').empty();
-      data.map((person) => {
+      data.message.map((person) => {
         $('.people').html(`<label for="${person}">
               <input id="${person}" type="checkbox">
               ${person}
@@ -56,7 +56,7 @@ $('.makeGroup').submit(() => {
   });
   $.ajax({
     method: 'POST',
-    url: '', // вписать обработчик для выбранных имен
+    url: '/group/create/',
     data: checkedPeople,
   }).done(() => {
     checkedPeople.map((person) => {

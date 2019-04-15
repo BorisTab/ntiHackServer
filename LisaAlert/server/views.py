@@ -46,8 +46,9 @@ def get_unallocated_users(request):
 
 
 def create_group(request):
-    existing_group_ids = set([user.group_id for user in User.objects.all()])
-    group_id = len(list(existing_group_ids))+1
+    existing_group_ids = list(set([user.group_id for user in User.objects.all()]))
+    existing_group_ids.remove(-1)
+    group_id = len(existing_group_ids)+1
 
     data = json.loads(request.body.decode("utf-8"))
     nicknames = data['users']
