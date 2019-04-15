@@ -44,7 +44,7 @@ def get_unallocated_users(request):
 
     return JsonResponse(response.to_dict())
 
-
+@csrf_exempt
 def create_group(request):
     existing_group_ids = list(set([user.group_id for user in User.objects.all()]))
     existing_group_ids.remove(-1)
