@@ -1,6 +1,6 @@
 let map;
-let markers = [];
-let routes = [];
+const markers = [];
+const routes = [];
 let lastData = {};
 
 function initMap() {
@@ -20,7 +20,8 @@ $(document).ready(() => {
     [south, west] = sw.split(';');
     const deltaLng = east - west;
     const deltaLat = north - south;
-    const numberOfSquareLng = Math.ceil(deltaLng / (0.008*Math.cos(Math.PI/180 * +north)));
+    const numberOfSquareLng = Math.ceil(
+        deltaLng / (0.008*Math.cos(Math.PI/180 * +north)));
     const numberOfSquareLat = Math.ceil(deltaLat / 0.008);
     let squareWest = west;
 

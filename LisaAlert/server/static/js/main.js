@@ -1,9 +1,6 @@
 let lastDataUsers = {};
 
 $(document).ready(() => {
-  // show();
-  // setInterval('show()', 1000);
-
   $('.menu-btn').on('click', function(e) {
     e.preventDefault();
     $('.menu').toggleClass('menu_active');
@@ -35,9 +32,10 @@ $(document).ready(() => {
 const getUsers = () => {
   $.ajax({
     type: 'GET',
-    url: '',
+    url: '/person/iswaiting',
   }).done((data) => {
-    if (data !== lastData) {
+    if (data !== lastDataUsers) {
+      $('.people').empty();
       data.map((person) => {
         $('.people').html(`<label for="${person}">
               <input id="${person}" type="checkbox">
@@ -49,20 +47,21 @@ const getUsers = () => {
 };
 
 $('.makeGroup').submit(() => {
-  const checkedPeople = {};
+  let checkedPeople = [];
   $(this).find('input').each(() => {
     const person = $(this).prop('id');
     if ($(this).prop('checked')) {
-      checkedPeople[`${person}`] = true;
+      checkedPeople.push(person);
     }
   });
   $.ajax({
     method: 'POST',
-    url: '',
+    url: '', // вписать обработчик для выбранных имен
     data: checkedPeople,
-  }).done((data) => {
-    data.map((person) => {
+  }).done(() => {
+    checkedPeople.map((person) => {
       $(`#${person}`).css('display', 'none');
     });
+    checkedPeople = [];
   });
 });
