@@ -5,20 +5,22 @@ $(document).ready(() => {
     e.preventDefault();
     $('.menu').toggleClass('menu_active');
     $('.menu-btn').toggleClass('menu-btn_active');
-  })
+  });
 
-  $(".tab_item").not(":first").hide();
-  $(".wrapper1 .tab").click(function() {
-    $(".wrapper1 .tab").removeClass("active").eq($(this).index()).addClass("active");
-    $(".tab_item").hide().eq($(this).index()).fadeIn()
-  }).eq(0).addClass("active");
+  $('.tab_item').not(':first').hide();
+  $('.wrapper1 .tab').click(function() {
+    $('.wrapper1 .tab').removeClass('active')
+        .eq($(this).index()).addClass('active');
+    $('.tab_item').hide().eq($(this).index()).fadeIn();
+  }).eq(0).addClass('active');
   $.ajax({
     type: 'GET',
     url: '/person/is_waiting/',
   }).done((data) => {
     data.message.map((person) => {
-      $('.people').html(`<label for="${person}">
-            <input id="${person}" type="checkbox">
+      const htmlHere = $('.people').html();
+      $('.people').html(`${htmlHere}<label for="${person}" class="${person} person">
+            <input id="${person}" type="checkbox" value="${person}">
             ${person}
           </label>`);
     });
@@ -26,7 +28,6 @@ $(document).ready(() => {
   });
   setInterval(getUsers, 3000);
 });
-
 const getUsers = () => {
   $.ajax({
     type: 'GET',
@@ -40,11 +41,11 @@ const getUsers = () => {
       }
     });
     if (!check) {
-      console.log(lastDataUsers);
-      console.log(data.message);
-      $('.people').empty();
+      // console.log(lastDataUsers);
+      // console.log(data.message);
       data.message.map((person) => {
-        $('.people').html(`<label for="${person}"><input class="person" id="${person}" type="checkbox">${person}</label>`);
+        const htmlHere = $('.people').html();
+        $('.people').html(`${htmlHere}<input value="${person}" id="${person}" type="checkbox">${person}`);
       });
       lastDataUsers = data.message;
     }
@@ -52,19 +53,24 @@ const getUsers = () => {
 };
 
 $(document).on('click', '#sendGroup', (e) => {
-  console.log('ass');
   e.preventDefault();
-  let checkedPeople = [];
-  $(this).find('input').each(() => {
-    const person = $(this).prop('id');
-    if ($(this).prop('checked')) {
-      checkedPeople.push(person);
+  let checkedPeople = {
+    users: [],
+  };
+  console.log($('.people').children().attr('class'));
+  $('.people').find('input').each(function() {
+    const person = $(this).val();
+    if ($(`#${person}`).prop('checked')) {
+      checkedPeople.users.push(person);
     }
   });
+  console.log(checkedPeople);
+  const checkedPeopleJson = JSON.stringify(checkedPeople);
+  console.log(checkedPeopleJson);
   $.ajax({
     method: 'POST',
     url: '/group/create/',
-    data: checkedPeople,
+    data: checkedPeopleJson,
   }).done((data) => {
     if (data.status === 'OK') {
       checkedPeople.map((person) => {
@@ -75,3 +81,4 @@ $(document).on('click', '#sendGroup', (e) => {
   });
   return false;
 });
+
