@@ -137,17 +137,24 @@ def frontend_update(request):
     colors = [color.color for color in Color.objects.all().order_by('group_id')]
 
     for user in users:
-        route_entries = Route.objects.filter(person_id=user.person_id)
-        route = [{'lat': point.lat, 'lng': point.lng} for point in route_entries]
-        infobox = """<h1 style='color:#000'>
-                    <p>"""+user.nickname+"""</p>
-                    <p>Группа: Лиса """ + str(user.group_id) + """</p>
-                </h1>"""
-        user_data= {"color": colors[user.group_id],
-                    'coordinates': route[::-1][0],
-                    'route': route,
-                    'infobox': infobox}
-        data['users'].append(user_data)
+        if user.group_id != -1:
+            route_entries = Route.objects.filter(person_id=user.person_id)
+            route = [{'lat': point.lat, 'lng': point.lng} for point in route_entries]
+            infobox = """<h1 style='color:#000'>
+                        <p>"""+user.nickname+"""</p>
+                        <p>Группа: Лиса """ + str(user.group_id) + """</p>
+                    </h1>"""
+            user_data= {"color": colors[user.group_id],
+                        'infobox': infobox}
+
+            try:
+                user_data['coordinates'] = route[::-1][0]
+                user_data['route'] = route
+            except IndexError:
+                user_data['coordinates'] = []
+                user_data['route'] = []
+
+            data['users'].append(user_data)
 
     response = ServerResponse(status="OK", message=data)
 
