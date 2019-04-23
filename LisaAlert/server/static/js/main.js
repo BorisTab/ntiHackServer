@@ -41,8 +41,6 @@ const getUsers = () => {
       }
     });
     if (!check) {
-      // console.log(lastDataUsers);
-      // console.log(data.message);
       data.message.map((person) => {
         const htmlHere = $('.people').html();
         $('.people').html(`${htmlHere}<input value="${person}" id="${person}" type="checkbox">${person}`);
@@ -57,25 +55,20 @@ $(document).on('click', '#sendGroup', (e) => {
   let checkedPeople = {
     users: [],
   };
-  console.log($('.people').children().attr('class'));
   $('.people').find('input').each(function() {
     const person = $(this).val();
     if ($(`#${person}`).prop('checked')) {
       checkedPeople.users.push(person);
     }
   });
-  console.log(checkedPeople);
   const checkedPeopleJson = JSON.stringify(checkedPeople);
-  console.log(checkedPeopleJson);
   $.ajax({
     method: 'POST',
     url: '/group/create/',
     data: checkedPeopleJson,
   }).done((data) => {
     if (data.status === 'OK') {
-      checkedPeople.map((person) => {
-        $(`#${person}`).css('display', 'none');
-      });
+      $('.people').empty();
       checkedPeople = [];
     }
   });
