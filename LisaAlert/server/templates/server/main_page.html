@@ -26,12 +26,13 @@
             <span class="tab">Настройки</span>
         </div>
         <div class="tab_content">
-            <form action="/group/create/1" method="POST">
+            <form class="makeGroup">
                 <div class="tab_item">
                     <nav class="menu-list">
-                        <div class="persons"></div>
+                        <div class="people"></div>
                     </nav>
-                    <input class="button" name="button" type="submit" value="Создать группу"></div>
+                    <button id="sendGroup" class="button" type="button">Создать группу</button>
+                </div>
             </form>
             <div class="tab_item">
                 <nav class="menu-list">
@@ -39,16 +40,16 @@
                     <label for="switch1" class="switch-for">Показать трек</label>
                     <form id="coordinates" class="inputs">
                         <div class="border-input">
-                            <p>Координаты левого верхнего угла</p>
-                            <input id="rightUp" class="input" name="input1" title="Координаты левого верхнего угла"
-                                   placeholder="Пример:   52.43; 43.22" type="text">
+                            <p>Координаты правого верхнего угла</p>
+                            <input id="rightUp" class="input" name="input1" title="Координаты правого верхнего угла"
+                                   placeholder="Пример:   52.43;43.22" type="text">
                         </div>
                         <div class="border-input">
-                            <p>Координаты правого нижнего угла</p>
-                            <input id="leftBottom" class="input" name="input2" title="Координаты правого нижнего угла"
-                                   placeholder="Пример:   28.16; 37.36" type="text">
+                            <p>Координаты левого нижнего угла</p>
+                            <input id="leftBottom" class="input" name="input2" title="Координаты левого нижнего угла"
+                                   placeholder="Пример:   28.16;37.36" type="text">
                         </div>
-                        <button id="coordinateSend" class="button" name="button-cor" type="submit">Включить сетку</button>
+                        <button id="coordinateSend" class="button" type="submit">Включить сетку</button>
                     </form>
                 </nav>
             </div>

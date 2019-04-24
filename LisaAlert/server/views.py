@@ -44,10 +44,11 @@ def get_unallocated_users(request):
 
     return JsonResponse(response.to_dict())
 
-
+@csrf_exempt
 def create_group(request):
-    existing_group_ids = set([user.group_id for user in User.objects.all()])
-    group_id = len(list(existing_group_ids))+1
+    existing_group_ids = list(set([user.group_id for user in User.objects.all()]))
+    existing_group_ids.remove(-1)
+    group_id = len(existing_group_ids)+1
 
     data = json.loads(request.body.decode("utf-8"))
     nicknames = data['users']
@@ -136,17 +137,24 @@ def frontend_update(request):
     colors = [color.color for color in Color.objects.all().order_by('group_id')]
 
     for user in users:
-        route_entries = Route.objects.filter(person_id=user.person_id)
-        route = [{'lat': point.lat, 'lng': point.lng} for point in route_entries]
-        infobox = """<h1 style='color:#000'>
-                    <p>"""+user.nickname+"""</p>
-                    <p>Группа: Лиса """ + str(user.group_id) + """</p>
-                </h1>"""
-        user_data= {"color": colors[user.group_id],
-                    'coordinates': route[::-1][0],
-                    'route': route,
-                    'infobox': infobox}
-        data['users'].append(user_data)
+        if user.group_id != -1:
+            route_entries = Route.objects.filter(person_id=user.person_id)
+            route = [{'lat': point.lat, 'lng': point.lng} for point in route_entries]
+            infobox = """<h1 style='color:#000'>
+                        <p>"""+user.nickname+"""</p>
+                        <p>Группа: Лиса """ + str(user.group_id) + """</p>
+                    </h1>"""
+            user_data= {"color": colors[user.group_id],
+                        'infobox': infobox}
+
+            try:
+                user_data['coordinates'] = route[::-1][0]
+                user_data['route'] = route
+            except IndexError:
+                user_data['coordinates'] = []
+                user_data['route'] = []
+
+            data['users'].append(user_data)
 
     response = ServerResponse(status="OK", message=data)
 

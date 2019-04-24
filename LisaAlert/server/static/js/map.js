@@ -1,6 +1,6 @@
 let map;
-let markers = [];
-let routes = [];
+const markers = [];
+const routes = [];
 let lastData = {};
 
 function initMap() {
@@ -9,39 +9,48 @@ function initMap() {
     zoom: 5,
     disableDefaultUI: true,
   });
-
-  const bounds = {
-    north: 55.75,
-    south: 55.72,
-    east: 37.70,
-    west: 37.65,
-  };
-
-  // rectangle = new google.maps.Rectangle({
-  //   bounds: bounds,
-  //   editable: false,
-  //   draggable: false,
-  // });
-
-  // rectangle.setMap(map);
 }
 
 $(document).ready(() => {
-  $('#coordinateSend').click(() => {
+  $('#coordinates').submit((e) => {
+    e.preventDefault();
     const ne = $('#rightUp').val();
     const sw = $('#leftBottom').val();
-    console.log('aaa');
+    [north, east] = ne.split(';');
+    [south, west] = sw.split(';');
+    const deltaLng = east - west;
+    const deltaLat = north - south;
+    const numberOfSquareLng = Math.ceil(
+        deltaLng / (0.008*Math.cos(Math.PI/180 * +north)));
+    const numberOfSquareLat = Math.ceil(deltaLat / 0.008);
+    let squareWest = west;
 
-    // const newBounds = {
-    //   north: rightUpLat,
-    //   south: leftDownLat,
-    //   east: rightUpLng,
-    //   west: leftDownLng,
-    // };
+    for (let squareLng = 0; squareLng < numberOfSquareLng; squareLng++) {
+      south = +north + (0.008*Math.cos(Math.PI/180 * +north));
+      squareWest = west;
+      for (let squareLat = 0; squareLat <= numberOfSquareLat; squareLat++) {
+        east = +squareWest + 0.008;
+        const bounds = {
+          north: +north,
+          south: south,
+          east: +east,
+          west: squareWest,
+        };
+        const square = new google.maps.Rectangle({
+          strokeColor: '#000000',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#000000',
+          fillOpacity: 0.2,
+          bounds: bounds,
+        });
+        square.setMap(map);
+        squareWest = +squareWest + 0.008;
+      }
+      north = +north + (0.008*Math.cos(Math.PI/180 * +north));
+    }
   });
-  // addMarker();
-  // addRoute();
-  // addMarkup();
+
   $.ajax({
     type: 'POST',
     url: '/map/update/',
@@ -56,7 +65,7 @@ $(document).ready(() => {
     markups.map((item) => {
       addMarkup(item.coordinates, item.infobox);
     });
-    lastData = data;
+    lastData = data.message;
   });
   setInterval(getData, 3000);
 });
@@ -105,7 +114,6 @@ function clearMarker(id) {
 }
 
 function clearRoutes(id) {
-  console.log(routes[id]);
   routes[id].setMap(null);
 }
 
@@ -131,7 +139,6 @@ $(document).on('click', '.switch-for', () => {
       route.setMap(null);
     });
   } else {
-    console.log(lastData.users);
     switchCheck = true;
     lastData.users.map((user) => {
       const itemId = lastData.users.indexOf(user);
@@ -150,8 +157,6 @@ const getData = () => {
       const itemId = users.indexOf(item);
       if (lastData.users[itemId].coordinates.lat !== item.coordinates.lat ||
         lastData.users[itemId].coordinates.lng !== item.coordinates.lng) {
-        console.log(lastData);
-        console.log(markers);
         clearMarker(itemId);
         clearRoutes(itemId);
         addMarker(item.coordinates, item.color, item.infobox, itemId);
@@ -161,7 +166,6 @@ const getData = () => {
     markups.map((item) => {
       addMarkup(item.coordinates, item.infobox);
     });
-    lastData = data;
+    lastData = data.message;
   });
 };
-// TODO remove checkbox
