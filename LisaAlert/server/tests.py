@@ -46,7 +46,7 @@ class UserTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_data_update(self):
-        data = {"person_id": self.user.person_id, 'lat': '37.4568', 'lng': '52.6789', 'time': str(datetime.now())}
+        data = {"nickname": self.user.nickname, 'lat': '37.4568', 'lng': '52.6789', 'time': str(datetime.now())}
         request = self.factory.post("person/update/", data, content_type="application/json")
         response = update(request)
         self.assertEqual(response.status_code, 200)
@@ -74,8 +74,8 @@ class FrontendTestCase(TestCase):
         self.color2 =Color.objects.create(color="ffffff", group_id=2)
 
     def test_frontend_update(self):
-        first_position_data = {"person_id": self.user.person_id, 'lat': '37.4568', 'lng': '53.6789', 'time': str(datetime.now())}
-        second_position_data = {"person_id": self.user.person_id, 'lat': '34.4568', 'lng': '52.6789', 'time': str(datetime.now())}
+        first_position_data = {"nickname": self.user.nickname, 'lat': '37.4568', 'lng': '53.6789', 'time': str(datetime.now())}
+        second_position_data = {"nickname": self.user.nickname, 'lat': '34.4568', 'lng': '52.6789', 'time': str(datetime.now())}
         first_request = self.factory.post("person/update/", first_position_data, content_type="application/json")
         second_request = self.factory.post("person/update/", second_position_data, content_type="application/json")
         update(first_request)

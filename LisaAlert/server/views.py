@@ -82,10 +82,10 @@ def update(request):
     data = json.loads(request.body.decode("utf-8"))
     latitude = data['lat']
     longitude = data['lng']
-    person_id = data['person_id']
+    nickname = data['nickname']
     time = data['time']
 
-    user = User.objects.get(person_id=person_id)
+    user = User.objects.get(nickname=nickname)
     route_point = Route(lat=latitude, lng=longitude, time=time, person_id=user)
     route_point.save()
     response = ServerResponse(status="OK", message="")
