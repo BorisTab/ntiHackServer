@@ -151,7 +151,7 @@ def frontend_update(request):
                 user_data['coordinates'] = route[::-1][0]
                 user_data['route'] = route
             except IndexError:
-                user_data['coordinates'] = []
+                user_data['coordinates'] = {}
                 user_data['route'] = []
 
             data['users'].append(user_data)
@@ -163,11 +163,3 @@ def frontend_update(request):
 
 def main_view(request):
     return render(request, 'server/main_page.html')
-
-
-
-
-
-
-
-
